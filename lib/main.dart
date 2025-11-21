@@ -1,3 +1,4 @@
+import 'package:exer/home.dart';
 import 'package:flutter/material.dart';
 import 'test.dart';
 
@@ -14,9 +15,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.white,
+          background: Colors.white,
+        ),
+        scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'Manrope',
       ),
-      home: const Test(),
+      home: const Home(),
     );
   }
 }
