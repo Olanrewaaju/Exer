@@ -79,6 +79,49 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              FutureBuilder<List<dynamic>>(
+                future: mainz,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.hasData) {
+                    final generalData = snapshot.data!;
+                    final chipData = generalData.length > 2
+                        ? generalData[2]
+                        : null;
+                    final chipValue = chipData != null
+                        ? (chipData['data'] as List)
+                        : <dynamic>[];
+                    final safeCount = chipValue.length >= 8
+                        ? 14
+                        : chipValue.length;
+
+                    return SizedBox(
+                      height: 56,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: safeCount,
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        itemBuilder: (context, index) {
+                          final c = chipValue[index];
+                          final name = c['name'] ?? '';
+                          return Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: Chip(label: Text(name)),
+                          );
+                        },
+                      ),
+                    );
+                  }
+
+                  return SizedBox.shrink();
+                },
+              ),
+
               SizedBox(height: 50),
               Text(
                 'Chest Workout with equipments',
