@@ -21,31 +21,37 @@ class _SecondHomeContainerState extends State<SecondHomeContainer> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(8),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         border: BoxBorder.all(color: const Color.fromARGB(31, 123, 123, 123)),
       ),
-      width: 280,
-      height: 100,
+      width: 290,
+      // height: 0,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            width: 100,
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
-            widget.gifImage,
+          Center(
+            child: Image.network(
+              width: 200,
+              filterQuality: FilterQuality.high,
+              fit: BoxFit.contain,
+              widget.gifImage,
+            ),
           ),
-          SizedBox(width: 6),
+          SizedBox(width: 6, height: 8),
           Expanded(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
+                  textAlign: TextAlign.start,
                   (widget.name ?? '').toString().capitalizeWords(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 6),
                 Text(
                   (widget.part ?? '').toString().capitalizeWords(),
                   style: TextStyle(fontSize: 12),

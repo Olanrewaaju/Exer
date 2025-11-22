@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auto_caps.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TopHomeContainer extends StatefulWidget {
   String name;
@@ -32,11 +33,28 @@ class _TopHomeContainerState extends State<TopHomeContainer> {
       height: 100,
       child: Row(
         children: [
+          // CachedNetworkImage(
+          //   imageUrl: widget.gifImage,
+          //   fit: BoxFit.cover,
+          //   placeholder: (context, url) => CircularProgressIndicator(),
+          //   errorWidget: (context, url, error) => Icon(Icons.error),
+          // ),
           Image.network(
+            widget.gifImage,
+            gaplessPlayback: true,
             width: 100,
             filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
-            widget.gifImage,
+
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (frame == null) {
+                return child;
+              }
+              return AnimatedSwitcher(
+                duration: Duration(milliseconds: 0),
+                child: child,
+              );
+            },
           ),
           SizedBox(width: 6),
           Expanded(
