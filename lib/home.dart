@@ -79,6 +79,8 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(height: 32),
+
               FutureBuilder<List<dynamic>>(
                 future: mainz,
                 builder: (context, snapshot) {
@@ -189,7 +191,7 @@ class _HomeState extends State<Home> {
                 future: mainz,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasData) {
                     final results = snapshot.data!;
                     final details = results[1];
