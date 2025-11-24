@@ -100,10 +100,7 @@ class _HomeState extends State<Home> {
                     final chipValue = chipData != null
                         ? (chipData['data'] as List)
                         : <dynamic>[];
-                    final safeCount = chipValue.length >= 8
-                        ? 14
-                        : chipValue.length;
-
+                    final safeCount = chipValue.length;
                     return SizedBox(
                       height: 56,
                       child: ListView.builder(
