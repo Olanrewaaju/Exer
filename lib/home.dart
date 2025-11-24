@@ -1,9 +1,11 @@
+import 'package:exer/details_screen.dart';
 import 'package:exer/second_home_container.dart';
 import 'package:exer/top_home_container.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:exer/auto_caps.dart';
+import 'provider_full_details.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
@@ -19,7 +21,7 @@ class _HomeState extends State<Home> {
   int shows = 4;
   String today = DateFormat('EEEE,MMMM,d').format(DateTime.now());
   Future<List<dynamic>> fetchUser() async {
-    final chipUrl = Uri.parse('https://exercise23.vercel.app/api/v1/muscles');
+    final chipUrl = Uri.parse('https://exercise23.vercel.app/api/v1/bodyparts');
     final url = Uri.parse(
       'https://exercise23.vercel.app/api/v1/bodyparts/chest/exercises',
     );
@@ -110,10 +112,28 @@ class _HomeState extends State<Home> {
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         itemBuilder: (context, index) {
                           final c = chipValue[index];
+                          String navs = c['name']?.toString() ?? '';
                           final name = c['name'] ?? '';
+                          // context.watch<ProviderFullDetails>().displayVal(navs);
                           return Padding(
                             padding: EdgeInsets.only(right: 8),
-                            child: Chip(label: Text(name)),
+                            child: GestureDetector(
+                              onTap: () {
+                                context.read<ProviderFullDetails>().displayVal(
+                                  navs,
+                                );
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return DetailsScreen(type: navs);
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Chip(label: Text(name)),
+                            ),
                           );
                         },
                       ),
