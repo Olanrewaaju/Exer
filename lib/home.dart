@@ -90,7 +90,9 @@ class _HomeState extends State<Home> {
                     return Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Center(
+                      child: Text('Cannot connect to the internet. Try again '),
+                    );
                   }
                   if (snapshot.hasData) {
                     final generalData = snapshot.data!;

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:exer/details_container.dart';
 import 'package:exer/provider_full_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class DetailsScreen extends StatefulWidget {
-  String type;
+  final String type;
   DetailsScreen({super.key, required this.type});
 
   @override
@@ -35,47 +36,73 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final typeToUse = (providerVal.isNotEmpty) ? providerVal : widget.type;
 
     return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            FutureBuilder<Map<String, dynamic>>(
-              future: apiValues(typeToUse),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasData) {
-                  final values = snapshot.data!;
-                  final data = values['data'];
-                  if (data is List && data.isNotEmpty) {
-                    final imageGif = data[2]['gifUrl'];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.network(
-                          filterQuality: FilterQuality.high,
-                          imageGif.toString(),
-                          fit: BoxFit.cover,
-
-                          width: double.infinity,
-                        ),
-                        Text(
-                          providerVal.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return Center(child: Text('No data available'));
-                }
-                return SizedBox.shrink();
+            IconButton(
+              onPressed: () {
+                SnackBar(content: Text('data'));
               },
+              icon: Icon(Icons.info_outline_rounded, color: Colors.black54),
             ),
           ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: apiValues(typeToUse),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              final values = snapshot.data!;
+              final data = values['data'];
+              if (data is List && data.isNotEmpty) {
+                final imageGif = data[8]['gifUrl'];
+                return ListView.builder(
+                  itemCount: data.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            imageGif.toString(),
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                          SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              providerVal.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      );
+                    }
+                    final item = data[index - 1];
+                    return DetailsContainer(
+                      gifName: item['gifUrl'],
+                      exerName: item['name'],
+                      otherName: 'Equipments: ${item['equipments'][0]}',
+                    );
+                  },
+                );
+              }
+              return Center(child: Text('No data available'));
+            }
+            return SizedBox.shrink();
+          },
         ),
       ),
     );
