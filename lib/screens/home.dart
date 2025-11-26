@@ -1,10 +1,10 @@
-import 'package:exer/details_screen.dart';
-import 'package:exer/second_home_container.dart';
-import 'package:exer/top_home_container.dart';
+import 'package:exer/screens/details_screen.dart';
+import 'package:exer/reusable_widgets/second_home_container.dart';
+import 'package:exer/reusable_widgets/top_home_container.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'provider_full_details.dart';
+import '../state_management/provider_full_details.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'auto_caps.dart';
 
 class DetailsContainer extends StatelessWidget {
   final String gifName;
@@ -26,9 +27,18 @@ class DetailsContainer extends StatelessWidget {
               // mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exerName, overflow: TextOverflow.ellipsis, maxLines: 1),
+                Text(
+                  (exerName ?? '').toString().capitalizeWords(),
+                  style: TextStyle(fontSize: 16),
+
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
                 SizedBox(height: 4),
-                Text(otherName),
+                Text(
+                  otherName,
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+                ),
               ],
             ),
           ),

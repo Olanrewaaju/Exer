@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:exer/details_container.dart';
-import 'package:exer/provider_full_details.dart';
+import 'package:exer/reusable_widgets/details_container.dart';
+import 'package:exer/state_management/provider_full_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -37,18 +37,59 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          // crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            IconButton(
-              onPressed: () {
-                SnackBar(content: Text('data'));
-              },
-              icon: Icon(Icons.info_outline_rounded, color: Colors.black54),
-            ),
-          ],
-        ),
+        title: Text(typeToUse.toUpperCase()),
+        actions: [
+          FutureBuilder<Map<String, dynamic>>(
+            future: apiValues(typeToUse),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return SizedBox.shrink();
+              final values = snapshot.data!;
+              final data = values['data'];
+              final totalNum = (data is List) ? data.length : 0;
+              return Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      final RenderBox button =
+                          context.findRenderObject() as RenderBox;
+                      final RenderBox overlay =
+                          Overlay.of(context).context.findRenderObject()
+                              as RenderBox;
+
+                      final RelativeRect position = RelativeRect.fromRect(
+                        Rect.fromPoints(
+                          button.localToGlobal(Offset.zero, ancestor: overlay),
+                          button.localToGlobal(
+                            button.size.bottomRight(Offset.zero),
+                            ancestor: overlay,
+                          ),
+                        ),
+                        Offset.zero & overlay.size,
+                      );
+
+                      showMenu(
+                        context: context,
+                        position: position,
+                        items: [
+                          PopupMenuItem(
+                            child: SizedBox(
+                              width: 200,
+                              child: Text(
+                                "This set of Exercises are collated and their main focus is on the $providerVal!\n\n Total number of workout: $totalNum",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -61,9 +102,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
               final values = snapshot.data!;
               final data = values['data'];
               if (data is List && data.isNotEmpty) {
-                final imageGif = data[8]['gifUrl'];
+                final imageGif = data[1]['gifUrl'];
                 return ListView.builder(
-                  itemCount: data.length + 1,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Column(

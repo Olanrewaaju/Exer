@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'auto_caps.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class TopHomeContainer extends StatefulWidget {
   String name;

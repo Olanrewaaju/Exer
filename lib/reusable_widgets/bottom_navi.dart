@@ -1,6 +1,6 @@
-import 'package:exer/bookmarked_screen.dart';
+import '../screens/bookmarked_screen.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+import '../screens/home.dart';
 
 class BottomNavi extends StatefulWidget {
   const BottomNavi({super.key});

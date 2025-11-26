@@ -1,6 +1,6 @@
-import 'package:exer/bottom_navi.dart';
-import 'package:exer/home.dart';
-import 'package:exer/provider_full_details.dart';
+import 'package:exer/reusable_widgets/bottom_navi.dart';
+import 'package:exer/screens/home.dart';
+import 'package:exer/state_management/provider_full_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
