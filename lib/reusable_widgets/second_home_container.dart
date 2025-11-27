@@ -24,7 +24,7 @@ class _SecondHomeContainerState extends State<SecondHomeContainer> {
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        border: BoxBorder.all(color: const Color.fromARGB(31, 123, 123, 123)),
+        border: Border.all(color: const Color.fromARGB(31, 123, 123, 123)),
       ),
       width: 290,
       // height: 0,
@@ -41,23 +41,15 @@ class _SecondHomeContainerState extends State<SecondHomeContainer> {
             ),
           ),
           SizedBox(width: 6, height: 8),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  textAlign: TextAlign.start,
-                  (widget.name ?? '').toString().capitalizeWords(),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  (widget.part ?? '').toString().capitalizeWords(),
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
+          Text(
+            textAlign: TextAlign.start,
+            (widget.name ?? '').toString().capitalizeWords(),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 6),
+          Text(
+            (widget.part ?? '').toString().capitalizeWords(),
+            style: TextStyle(fontSize: 12),
           ),
         ],
       ),

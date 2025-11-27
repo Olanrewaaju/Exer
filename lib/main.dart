@@ -1,6 +1,7 @@
 import 'package:exer/reusable_widgets/bottom_navi.dart';
 import 'package:exer/screens/home.dart';
 import 'package:exer/state_management/provider_full_details.dart';
+import 'package:exer/state_management/provider_part.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,15 +15,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProviderFullDetails(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProviderFullDetails()),
+        ChangeNotifierProvider(create: (context) => ProviderPart()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.white,
-            background: Colors.white,
+            // background: Colors.white,
           ),
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Manrope',

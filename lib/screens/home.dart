@@ -1,6 +1,8 @@
 import 'package:exer/screens/details_screen.dart';
 import 'package:exer/reusable_widgets/second_home_container.dart';
 import 'package:exer/reusable_widgets/top_home_container.dart';
+import 'package:exer/screens/final_details_screen.dart';
+import 'package:exer/state_management/provider_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -56,6 +58,8 @@ class _HomeState extends State<Home> {
     super.initState();
     mainz = fetchUser();
   }
+
+  String fags = 'DUDes';
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +154,7 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 24),
               SizedBox(
-                height: 370,
+                height: 360,
                 child: FutureBuilder<List<dynamic>>(
                   future: mainz,
                   builder: (context, snapshot) {
@@ -165,6 +169,8 @@ class _HomeState extends State<Home> {
                         scrollDirection: Axis.horizontal,
                         itemCount: (mainDetails.length / 2).ceil(),
                         itemBuilder: (context, index) {
+                          final item = mainDetails[index];
+
                           int index1 = index * 2;
                           int index2 = index1 + 1;
 
@@ -176,20 +182,58 @@ class _HomeState extends State<Home> {
                           return Column(
                             children: [
                               SizedBox(
-                                height: 170,
-                                child: TopHomeContainer(
-                                  part: exerciseNum1['equipments'][0],
-                                  name: exerciseNum1['name'],
-                                  gifImage: exerciseNum1['gifUrl'],
+                                height: 180,
+
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return FinalDetailsScreen(
+                                            item: item,
+                                            name: 'chest',
+                                          );
+                                        },
+                                      ),
+                                    );
+                                    context.read<ProviderPart>().displayVal(
+                                      'chest',
+                                    );
+                                  },
+                                  child: TopHomeContainer(
+                                    part: exerciseNum1['equipments'][0],
+                                    name: exerciseNum1['name'],
+                                    gifImage: exerciseNum1['gifUrl'],
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height: 200,
+                                height: 180,
                                 child: exerciseNum2 != null
-                                    ? TopHomeContainer(
-                                        part: exerciseNum2['equipments'][0],
-                                        name: exerciseNum2['name'],
-                                        gifImage: exerciseNum2['gifUrl'],
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return FinalDetailsScreen(
+                                                  item: item,
+
+                                                  name: 'chest',
+                                                );
+                                              },
+                                            ),
+                                          );
+                                          context
+                                              .read<ProviderPart>()
+                                              .displayVal('chest');
+                                        },
+                                        child: TopHomeContainer(
+                                          part: exerciseNum2['equipments'][0],
+                                          name: exerciseNum2['name'],
+                                          gifImage: exerciseNum2['gifUrl'],
+                                        ),
                                       )
                                     : SizedBox.shrink(),
                               ),
@@ -224,12 +268,44 @@ class _HomeState extends State<Home> {
                         scrollDirection: Axis.horizontal,
                         itemCount: safeCount,
                         itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 360,
-                            child: SecondHomeContainer(
-                              gifImage: vals[index]['gifUrl'],
-                              name: vals[index]['name'],
-                              part: vals[index]['targetMuscles'][0],
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  print('It works ');
+                                  return FinalDetailsScreen(
+                                    item: index,
+
+                                    name: fags,
+                                  );
+                                },
+                              ),
+                            ),
+                            child: SizedBox(
+                              width: 360,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return FinalDetailsScreen(
+                                          item: index,
+
+                                          name: fags,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: SecondHomeContainer(
+                                  gifImage: vals[index]['gifUrl'],
+                                  name: vals[index]['name'],
+                                  part: vals[index]['targetMuscles'][0],
+                                ),
+                              ),
                             ),
                           );
                         },

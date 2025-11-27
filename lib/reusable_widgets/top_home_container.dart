@@ -28,7 +28,7 @@ class _TopHomeContainerState extends State<TopHomeContainer> {
         borderRadius: BorderRadius.circular(6),
         border: BoxBorder.all(color: const Color.fromARGB(31, 123, 123, 123)),
       ),
-      width: 280,
+      width: 320,
       height: 100,
       child: Row(
         children: [
