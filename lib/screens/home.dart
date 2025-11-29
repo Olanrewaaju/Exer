@@ -1,7 +1,7 @@
 import 'package:exer/screens/details_screen.dart';
 import 'package:exer/reusable_widgets/second_home_container.dart';
 import 'package:exer/reusable_widgets/top_home_container.dart';
-import 'package:exer/screens/final_details_screen.dart';
+import 'package:exer/screens/full_details.dart';
 import 'package:exer/state_management/provider_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -169,8 +169,6 @@ class _HomeState extends State<Home> {
                         scrollDirection: Axis.horizontal,
                         itemCount: (mainDetails.length / 2).ceil(),
                         itemBuilder: (context, index) {
-                          final item = mainDetails[index];
-
                           int index1 = index * 2;
                           int index2 = index1 + 1;
 
@@ -190,15 +188,15 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return FinalDetailsScreen(
-                                            item: item,
-                                            name: 'chest',
+                                          return FullDetails(
+                                            number: index1,
+                                            name: exerciseNum1['name'],
                                           );
                                         },
                                       ),
                                     );
                                     context.read<ProviderPart>().displayVal(
-                                      'chest',
+                                      exerciseNum1,
                                     );
                                   },
                                   child: TopHomeContainer(
@@ -212,23 +210,7 @@ class _HomeState extends State<Home> {
                                 height: 180,
                                 child: exerciseNum2 != null
                                     ? GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return FinalDetailsScreen(
-                                                  item: item,
-
-                                                  name: 'chest',
-                                                );
-                                              },
-                                            ),
-                                          );
-                                          context
-                                              .read<ProviderPart>()
-                                              .displayVal('chest');
-                                        },
+                                        onTap: () {},
                                         child: TopHomeContainer(
                                           part: exerciseNum2['equipments'][0],
                                           name: exerciseNum2['name'],
@@ -270,36 +252,11 @@ class _HomeState extends State<Home> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  print('It works ');
-                                  return FinalDetailsScreen(
-                                    item: index,
-
-                                    name: fags,
-                                  );
-                                },
-                              ),
-                            ),
+                            onTap: () {},
                             child: SizedBox(
                               width: 360,
                               child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return FinalDetailsScreen(
-                                          item: index,
-
-                                          name: fags,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
+                                onTap: () {},
                                 child: SecondHomeContainer(
                                   gifImage: vals[index]['gifUrl'],
                                   name: vals[index]['name'],

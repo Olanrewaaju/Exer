@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'auto_caps.dart';
 
 class SecondHomeContainer extends StatefulWidget {
-  String gifImage;
-  String name;
-  String part;
-  SecondHomeContainer({
+  final String gifImage;
+  final String name;
+  final String part;
+  const SecondHomeContainer({
     super.key,
     required this.gifImage,
     required this.name,

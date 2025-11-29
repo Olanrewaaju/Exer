@@ -11,7 +11,7 @@ class BottomNavi extends StatefulWidget {
 
 class _BottomNaviState extends State<BottomNavi> {
   int selectedIndex = 0;
-  final List<Widget> screens = [HomeScreen(), BookmarkedScreen()];
+  final List<Widget> screens = [Home(), BookmarkedScreen()];
 
   @override
   Widget build(BuildContext context) {

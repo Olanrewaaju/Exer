@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProviderPart extends ChangeNotifier {
-  String _word = '';
+  final int _val = 0;
 
-  String get words => _word;
+  int get val => _val;
 
-  void displayVal(String newWPart) {
-    _word = newWPart;
+  void displayVal(int newValue) {
+    newValue = _val;
     notifyListeners();
   }
 }

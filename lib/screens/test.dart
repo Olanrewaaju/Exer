@@ -23,7 +23,7 @@ class _TestState extends State<Test> {
     } else {
       print('Theres an error with the code');
     }
-    return Map();
+    return <String, dynamic>{};
   }
 
   @override
