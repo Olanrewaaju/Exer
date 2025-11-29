@@ -15,10 +15,10 @@ class FullDetails extends StatefulWidget {
   State<FullDetails> createState() => _FullDetailsState();
 }
 
-bool pres = false;
+bool pres = true;
 
-Future<Map<String, dynamic>> fetchUsers(String name) async {
-  final encodeds = Uri.encodeComponent(name);
+Future<Map<String, dynamic>> fetchUsers() async {
+  // final encodeds = Uri.encodeComponent(name);
   final uri = Uri.parse(
     'https://exercise23.vercel.app/api/v1/bodyparts/chest/exercises',
   );
@@ -33,6 +33,15 @@ Future<Map<String, dynamic>> fetchUsers(String name) async {
 }
 
 class _FullDetailsState extends State<FullDetails> {
+  late Future<Map<String, dynamic>> d;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    d = fetchUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerVal = context.watch<ProviderFullDetails>().word;
@@ -42,22 +51,11 @@ class _FullDetailsState extends State<FullDetails> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
 
-          children: [
-            IconButton(
-              icon: pres
-                  ? Icon(Icons.bookmark_border_rounded)
-                  : Icon(Icons.bookmark),
-              onPressed: () {
-                setState(() {
-                  pres = !pres;
-                });
-              },
-            ),
-          ],
+          children: [Icon(Icons.file_upload_outlined)],
         ),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchUsers(providerVal),
+        future: d,
         builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -86,6 +84,7 @@ class _FullDetailsState extends State<FullDetails> {
           final responseData = dataList[widget.number] as Map<String, dynamic>;
 
           final gifUrl = responseData['gifUrl'] as String? ?? '';
+          final secTar = responseData['secondaryMuscles'][0];
           final instruc = responseData['instructions'];
           return Padding(
             padding: EdgeInsetsGeometry.all(12),
@@ -99,17 +98,92 @@ class _FullDetailsState extends State<FullDetails> {
                       gifUrl,
                       width: double.infinity,
                       fit: BoxFit.fill,
-                    )
-                  else
-                    const SizedBox.shrink(),
+                    ),
+                  // else
+                  //   const SizedBox.shrink(),
                   SizedBox(height: 20),
-                  Text(
-                    (responseData['name'] ?? widget.name)
-                        .toString()
-                        .capitalizeWords(),
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          (responseData['name'] ?? widget.name)
+                              .toString()
+                              .capitalizeWords(),
+                          // overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            pres = !pres;
+                          });
+                        },
+                        icon: pres
+                            ? Icon(Icons.bookmark_border_rounded)
+                            : Icon(Icons.bookmark),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text('Target: ', style: TextStyle(fontSize: 10)),
+                      Text(
+                        (responseData['targetMuscles'][0])
+                            .toString()
+                            .capitalizeFirst(),
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+
+                  ListView.builder(
+                    // itemCount: secTar,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Text(
+                            'Secondary Target: ',
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          Text(
+                            (responseData['secondaryMuscles'][0])
+                                .toString()
+                                .capitalizeFirst(),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  // Row(
+                  //   children: [
+                  //     Text(
+                  //       'Secondary Target: ',
+                  //       style: TextStyle(fontSize: 10),
+                  //     ),
+                  //     Text(
+                  //       (responseData['secondaryMuscles'][0])
+                  //           .toString()
+                  //           .capitalizeFirst(),
+                  //       style: TextStyle(fontSize: 12),
+                  //     ),
+                  //   ],
+                  // ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Procedures: ',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 14),
+
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),

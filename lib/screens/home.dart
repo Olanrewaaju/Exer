@@ -210,7 +210,19 @@ class _HomeState extends State<Home> {
                                 height: 180,
                                 child: exerciseNum2 != null
                                     ? GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return FullDetails(
+                                                  name: '',
+                                                  number: index2,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
                                         child: TopHomeContainer(
                                           part: exerciseNum2['equipments'][0],
                                           name: exerciseNum2['name'],
