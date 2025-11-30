@@ -271,7 +271,22 @@ class _HomeState extends State<Home> {
                             child: SizedBox(
                               width: 360,
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return FullDetails(
+                                          name: '',
+                                          exercise: vals[index],
+                                        );
+                                      },
+                                    ),
+                                  );
+                                  context.read<ProviderPart>().displayVal(
+                                    vals[index],
+                                  );
+                                },
                                 child: SecondHomeContainer(
                                   gifImage: vals[index]['gifUrl'],
                                   name: vals[index]['name'],
