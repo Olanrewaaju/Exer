@@ -1,212 +1,176 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'dart:math';
 
 import 'package:exer/reusable_widgets/auto_caps.dart';
-import 'package:exer/state_management/provider_full_details.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exer/state_management/provider_part.dart';
 
 class FullDetails extends StatefulWidget {
   final String name;
-  final int number;
-  const FullDetails({super.key, required this.name, required this.number});
+  final Map<String, dynamic> exercise;
+  const FullDetails({super.key, required this.name, required this.exercise});
 
   @override
   State<FullDetails> createState() => _FullDetailsState();
 }
 
-bool pres = true;
-
-Future<Map<String, dynamic>> fetchUsers() async {
-  // final encodeds = Uri.encodeComponent(name);
-  final uri = Uri.parse(
-    'https://exercise23.vercel.app/api/v1/bodyparts/chest/exercises',
-  );
-  final responses = await http.get(uri);
-
-  if (responses.statusCode == 200) {
-    final urlValues = jsonDecode(responses.body) as Map<String, dynamic>;
-
-    return urlValues;
-  }
-  return {};
-}
-
 class _FullDetailsState extends State<FullDetails> {
-  late Future<Map<String, dynamic>> d;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    d = fetchUsers();
-  }
+  bool bookmarked = true;
 
   @override
   Widget build(BuildContext context) {
-    final providerVal = context.watch<ProviderFullDetails>().word;
+    final providerData = context.watch<ProviderPart>().val;
+    final Map<String, dynamic> data = providerData ?? widget.exercise;
+
+    final String gifUrl = (data['gifUrl'] ?? '') as String;
+    final String title = (data['name'] ?? widget.name).toString();
+    final String description = (data['description'] ?? '').toString();
+
+    // target muscles
+    String target = '';
+    if (data['targetMuscles'] is List &&
+        (data['targetMuscles'] as List).isNotEmpty) {
+      target = (data['targetMuscles'][0] ?? '').toString();
+    }
+
+    // secondary muscles list
+    List<String> secondary = [];
+    if (data['secondaryMuscles'] is List) {
+      secondary = List<String>.from(
+        (data['secondaryMuscles'] as List).map((e) => e.toString()),
+      );
+    }
+
+    // instructions - could be List or String
+    List<String> instructions = [];
+    if (data['instructions'] is List) {
+      instructions = List<String>.from(
+        (data['instructions'] as List).map((e) => e.toString()),
+      );
+    } else if (data['instructions'] is String) {
+      final s = (data['instructions'] as String).trim();
+      if (s.isNotEmpty) instructions = [s];
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
 
-          children: [Icon(Icons.file_upload_outlined)],
-        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Icon(Icons.file_upload_outlined),
+          ),
+        ],
+        // title: Text(title),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: d,
-        builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (gifUrl.isNotEmpty)
+              Center(
+                child: Image.network(
+                  gifUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              )
+            else
+              const SizedBox.shrink(),
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+            const SizedBox(height: 20),
 
-          if (!snapshot.hasData) {
-            return const Center(child: Text('No data'));
-          }
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    (title).toString().capitalizeWords(),
+                    style: TextStyle(fontSize: 32),
+                  ),
+                ),
 
-          final response = snapshot.data!;
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      bookmarked = !bookmarked;
+                    });
+                  },
+                  icon: Icon(
+                    size: 26,
+                    bookmarked ? Icons.bookmark_border_rounded : Icons.bookmark,
+                  ),
+                ),
+              ],
+            ),
 
-          if (response['data'] == null || response['data'] is! List) {
-            return const Center(child: Text('Invalid response data'));
-          }
+            const SizedBox(height: 12),
 
-          final dataList = response['data'] as List;
-
-          if (widget.number < 0 || widget.number >= dataList.length) {
-            return const Center(child: Text('Item not found'));
-          }
-
-          final responseData = dataList[widget.number] as Map<String, dynamic>;
-
-          final gifUrl = responseData['gifUrl'] as String? ?? '';
-          final secTar = responseData['secondaryMuscles'][0];
-          final instruc = responseData['instructions'];
-          return Padding(
-            padding: EdgeInsetsGeometry.all(12),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (target.isNotEmpty)
+              Row(
                 children: [
-                  if (gifUrl.isNotEmpty)
-                    Image.network(
-                      gifUrl,
-                      width: double.infinity,
-                      fit: BoxFit.fill,
-                    ),
-                  // else
-                  //   const SizedBox.shrink(),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          (responseData['name'] ?? widget.name)
-                              .toString()
-                              .capitalizeWords(),
-                          // overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            pres = !pres;
-                          });
-                        },
-                        icon: pres
-                            ? Icon(Icons.bookmark_border_rounded)
-                            : Icon(Icons.bookmark),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Text('Target: ', style: TextStyle(fontSize: 10)),
-                      Text(
-                        (responseData['targetMuscles'][0])
-                            .toString()
-                            .capitalizeFirst(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-
-                  ListView.builder(
-                    // itemCount: secTar,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          Text(
-                            'Secondary Target: ',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          Text(
-                            (responseData['secondaryMuscles'][0])
-                                .toString()
-                                .capitalizeFirst(),
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  // Row(
-                  //   children: [
-                  //     Text(
-                  //       'Secondary Target: ',
-                  //       style: TextStyle(fontSize: 10),
-                  //     ),
-                  //     Text(
-                  //       (responseData['secondaryMuscles'][0])
-                  //           .toString()
-                  //           .capitalizeFirst(),
-                  //       style: TextStyle(fontSize: 12),
-                  //     ),
-                  //   ],
-                  // ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Procedures: ',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(height: 14),
-
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: instruc.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(responseData['instructions'][index]),
-                            // SizedBox(height: 18),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                  const Text('Target: ', style: TextStyle(fontSize: 12)),
+                  Text(target, style: const TextStyle(fontSize: 14)),
                 ],
               ),
-            ),
-          );
-        },
+
+            const SizedBox(height: 6),
+
+            if (secondary.isNotEmpty)
+              Row(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Secondary Muscles:',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  // const SizedBox(height: 6),
+                  Text(secondary.join(',')),
+                  // Wrap(
+                  //   spacing: 8,
+                  //   runSpacing: 6,
+                  //   children: secondary
+                  //       .map((s) => Chip(label: Text(s)))
+                  //       .toList(),
+                  // ),
+                ],
+              ),
+
+            const SizedBox(height: 16),
+
+            if (description.isNotEmpty) ...[
+              Text(
+                'Description',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(description),
+              const SizedBox(height: 16),
+            ],
+
+            if (instructions.isNotEmpty) ...[
+              const Text(
+                'Procedures:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              ),
+              const SizedBox(height: 8),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: instructions.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  return Text('${instructions[index]}');
+                },
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

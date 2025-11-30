@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return FullDetails(
-                                            number: index1,
+                                            exercise: exerciseNum1,
                                             name: exerciseNum1['name'],
                                           );
                                         },
@@ -216,12 +216,15 @@ class _HomeState extends State<Home> {
                                             MaterialPageRoute(
                                               builder: (context) {
                                                 return FullDetails(
-                                                  name: '',
-                                                  number: index2,
+                                                  exercise: exerciseNum2,
+                                                  name: exerciseNum2['name'],
                                                 );
                                               },
                                             ),
                                           );
+                                          context
+                                              .read<ProviderPart>()
+                                              .displayVal(exerciseNum2);
                                         },
                                         child: TopHomeContainer(
                                           part: exerciseNum2['equipments'][0],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ProviderPart extends ChangeNotifier {
-  final int _val = 0;
+  Map<String, dynamic>? _val;
 
-  int get val => _val;
+  Map<String, dynamic>? get val => _val;
 
-  void displayVal(int newValue) {
-    newValue = _val;
+  void displayVal(Map<String, dynamic>? newValue) {
+    _val = newValue;
     notifyListeners();
   }
 }
