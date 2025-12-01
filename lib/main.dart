@@ -1,4 +1,5 @@
 import 'package:exer/reusable_widgets/bottom_navi.dart';
+import 'package:exer/screens/test1.dart';
 import 'package:exer/state_management/provider_full_details.dart';
 import 'package:exer/state_management/provider_part.dart';
 import 'package:flutter/material.dart';

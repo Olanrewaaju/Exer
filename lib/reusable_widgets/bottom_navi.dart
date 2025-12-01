@@ -1,3 +1,5 @@
+import 'package:exer/reusable_widgets/search_screen.dart';
+
 import '../screens/bookmarked_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/home.dart';
@@ -11,7 +13,7 @@ class BottomNavi extends StatefulWidget {
 
 class _BottomNaviState extends State<BottomNavi> {
   int selectedIndex = 0;
-  final List<Widget> screens = [Home(), BookmarkedScreen()];
+  final List<Widget> screens = [Home(), SearchScreen(), BookmarkedScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,10 @@ class _BottomNaviState extends State<BottomNavi> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search, size: 28),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Bookmarks',
           ),
         ],
       ),

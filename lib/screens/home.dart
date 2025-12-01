@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
     return [];
   }
 
+  final List dummyPictures = ['assets/images/image.png'];
   @override
   void initState() {
     // TODO: implement initState
@@ -59,6 +60,7 @@ class _HomeState extends State<Home> {
     mainz = fetchUser();
   }
 
+  List imagos = [''];
   String fags = 'DUDes';
 
   @override
@@ -135,7 +137,21 @@ class _HomeState extends State<Home> {
                                   ),
                                 );
                               },
-                              child: Chip(label: Text(name)),
+                              child: Row(
+                                children: [
+                                  Chip(
+                                    label: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/image.png',
+                                          width: 23,
+                                        ),
+                                        Text(name),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

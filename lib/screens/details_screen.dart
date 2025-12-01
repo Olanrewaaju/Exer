@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:exer/reusable_widgets/details_container.dart';
+import 'package:exer/screens/full_details.dart';
 import 'package:exer/state_management/provider_full_details.dart';
+import 'package:exer/state_management/provider_part.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -132,10 +134,28 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       );
                     }
                     final item = data[index - 1];
-                    return DetailsContainer(
-                      gifName: item['gifUrl'],
-                      exerName: item['name'],
-                      otherName: 'Equipments: ${item['equipments'][0]}',
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return FullDetails(
+                                name: '',
+                                exercise: data[index],
+                              );
+                            },
+                          ),
+                        );
+                        context.read<ProviderPart>().displayVal(
+                          data[index - 1],
+                        );
+                      },
+                      child: DetailsContainer(
+                        gifName: item['gifUrl'],
+                        exerName: item['name'],
+                        otherName: 'Equipments: ${item['equipments'][0]}',
+                      ),
                     );
                   },
                 );
