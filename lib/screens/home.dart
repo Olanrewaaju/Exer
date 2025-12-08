@@ -137,21 +137,7 @@ class _HomeState extends State<Home> {
                                   ),
                                 );
                               },
-                              child: Row(
-                                children: [
-                                  Chip(
-                                    label: Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/image.png',
-                                          width: 23,
-                                        ),
-                                        Text(name),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              child: Row(children: [Chip(label: Text(name))]),
                             ),
                           );
                         },

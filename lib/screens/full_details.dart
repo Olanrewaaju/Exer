@@ -1,9 +1,10 @@
-import 'dart:math';
+/*import 'dart:math';*/
 
 import 'package:exer/reusable_widgets/auto_caps.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exer/state_management/provider_part.dart';
+import 'package:exer/state_management/saved_exercise.dart';
 
 class FullDetails extends StatefulWidget {
   final String name;
@@ -92,16 +93,23 @@ class _FullDetailsState extends State<FullDetails> {
                   ),
                 ),
 
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      bookmarked = !bookmarked;
-                    });
+                Consumer<SavedExercise>(
+                  builder: (context, value, _) {
+                    final item = data;
+                    final saved = value.isBookmarked(item['exerciseId']);
+                    return IconButton(
+                      onPressed: () {
+                        context.read<SavedExercise>().toggeBookmarks(item);
+                        // setState(() {
+                        //   bookmarked = !bookmarked;
+                        // });
+                      },
+                      icon: Icon(
+                        size: 26,
+                        saved ? Icons.bookmark_border_rounded : Icons.bookmark,
+                      ),
+                    );
                   },
-                  icon: Icon(
-                    size: 26,
-                    bookmarked ? Icons.bookmark_border_rounded : Icons.bookmark,
-                  ),
                 ),
               ],
             ),
