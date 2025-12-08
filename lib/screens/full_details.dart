@@ -106,7 +106,7 @@ class _FullDetailsState extends State<FullDetails> {
                       },
                       icon: Icon(
                         size: 26,
-                        saved ? Icons.bookmark_border_rounded : Icons.bookmark,
+                        saved ? Icons.bookmark : Icons.bookmark_border_rounded,
                       ),
                     );
                   },

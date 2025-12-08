@@ -14,6 +14,7 @@ class SavedExercise extends ChangeNotifier {
       _bookmarkedItem.add(item);
       notifyListeners();
     }
+    notifyListeners();
   }
 
   void removeBookmark(String id) {
@@ -27,5 +28,6 @@ class SavedExercise extends ChangeNotifier {
     } else {
       addBookmark(item);
     }
+    notifyListeners();
   }
 }
