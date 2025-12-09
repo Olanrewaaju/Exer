@@ -99,6 +99,21 @@ class _FullDetailsState extends State<FullDetails> {
                     final saved = value.isBookmarked(item['exerciseId']);
                     return IconButton(
                       onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.black87,
+                            behavior: SnackBarBehavior.floating,
+                            padding: EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(3),
+                            ),
+                            duration: Duration(milliseconds: 900),
+                            content: saved
+                                ? Text('Removed from Bookmarked')
+                                : Text('Added to Bookmark'),
+                          ),
+                        );
+
                         context.read<SavedExercise>().toggeBookmarks(item);
                         // setState(() {
                         //   bookmarked = !bookmarked;

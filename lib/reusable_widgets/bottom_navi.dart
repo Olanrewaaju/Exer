@@ -1,4 +1,4 @@
-import 'package:exer/reusable_widgets/search_screen.dart';
+import 'package:exer/screens/search_screen.dart';
 
 import '../screens/bookmarked_screen.dart';
 import 'package:flutter/material.dart';

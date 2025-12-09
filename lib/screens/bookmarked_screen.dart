@@ -12,41 +12,42 @@ class BookmarkedScreen extends StatefulWidget {
 class _BookmarkedScreenState extends State<BookmarkedScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<SavedExercise>(
-      builder: (context, savedExer, _) {
-        final savedVal = savedExer.bookmarkedItem;
-        if (savedVal.isEmpty) {
-          return Center(child: Text('Empty Text'));
-        }
-        return ListView.builder(
-          itemCount: savedExer.bookmarkedItem.length,
-          itemBuilder: (context, index) {
-            final item = savedVal[index];
-            return Dismissible(
-              onDismissed: (direction) {
-                context.read<SavedExercise>().removeBookmark(
-                  item['exerciseId'],
-                );
-              },
-              key: Key(item['exerciseId'].toString()),
-              child: ListTile(
-                leading: Image.network(item['gifUrl']),
-                title: Text(item['name']),
-                subtitle: Text(item['bodyParts'][0]),
-                // trailing: IconButton(
-                //   onPressed: () {
-                //     context.read<SavedExercise>().removeBookmark(
-                //       savedVal.toString(),
-                //     );
-                //   },
-                //   icon: Icon(Icons.bookmark),
-                //   iconSize: 20,
-                // ),
-              ),
-            );
-          },
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        centerTitle: true,
+        title: Text('Bookmarked Exercises'),
+      ),
+      body: Consumer<SavedExercise>(
+        builder: (context, savedExer, _) {
+          final savedVal = savedExer.bookmarkedItem;
+          if (savedVal.isEmpty) {
+            return Center(child: Text('Empty Text'));
+          }
+          return ListView.builder(
+            itemCount: savedExer.bookmarkedItem.length,
+            itemBuilder: (context, index) {
+              final item = savedVal[index];
+              return Container(
+                height: 200,
+                child: Dismissible(
+                  onDismissed: (direction) {
+                    context.read<SavedExercise>().removeBookmark(
+                      item['exerciseId'],
+                    );
+                  },
+                  key: Key(item['exerciseId'].toString()),
+                  child: ListTile(
+                    leading: Image.network(item['gifUrl']),
+                    title: Text(item['name']),
+                    subtitle: Text(item['bodyParts'][0]),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
