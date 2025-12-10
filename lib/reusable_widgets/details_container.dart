@@ -20,7 +20,19 @@ class DetailsContainer extends StatelessWidget {
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.network(gifName, width: 120),
+          Image.network(
+            gifName,
+            width: 120,
+            // loadingBuilder: (context, child, loadingProgress) {
+            //   if (loadingProgress == null) {
+            //     return child;
+            //   }
+            //   return const Center(child: CircularProgressIndicator());
+            // },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(width: 120, child: Icon(Icons.image_rounded));
+            },
+          ),
           SizedBox(width: 10),
           Expanded(
             child: Column(

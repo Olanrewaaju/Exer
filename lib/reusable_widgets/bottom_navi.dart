@@ -1,3 +1,4 @@
+import 'package:exer/screens/profile_screen.dart';
 import 'package:exer/screens/search_screen.dart';
 
 import '../screens/bookmarked_screen.dart';
@@ -13,13 +14,19 @@ class BottomNavi extends StatefulWidget {
 
 class _BottomNaviState extends State<BottomNavi> {
   int selectedIndex = 0;
-  final List<Widget> screens = [Home(), SearchScreen(), BookmarkedScreen()];
+  final List<Widget> screens = [
+    Home(),
+    SearchScreen(),
+    BookmarkedScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         onTap: (int index) {
           setState(() {
             selectedIndex = index;
@@ -41,6 +48,7 @@ class _BottomNaviState extends State<BottomNavi> {
             icon: Icon(Icons.bookmark),
             label: 'Bookmarks',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

@@ -28,8 +28,8 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
             itemCount: savedExer.bookmarkedItem.length,
             itemBuilder: (context, index) {
               final item = savedVal[index];
-              return Container(
-                height: 200,
+              return SizedBox(
+                height: 90,
                 child: Dismissible(
                   onDismissed: (direction) {
                     context.read<SavedExercise>().removeBookmark(
@@ -38,7 +38,15 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
                   },
                   key: Key(item['exerciseId'].toString()),
                   child: ListTile(
-                    leading: Image.network(item['gifUrl']),
+                    leading: Image.network(
+                      errorBuilder: (context, error, stackTrace) {
+                        return Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(Icons.image_not_supported_rounded),
+                        );
+                      },
+                      item['gifUrl'],
+                    ),
                     title: Text(item['name']),
                     subtitle: Text(item['bodyParts'][0]),
                   ),

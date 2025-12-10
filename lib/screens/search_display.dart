@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:exer/reusable_widgets/details_container.dart';
 import 'package:exer/screens/full_details.dart';
+import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/provider_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,7 @@ class _SearchDisplayState extends State<SearchDisplay> {
                   SizedBox(height: 20),
                   Expanded(
                     child: ListView.builder(
-                      physics: PageScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       itemCount: mainNo.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -94,6 +95,9 @@ class _SearchDisplayState extends State<SearchDisplay> {
                                   );
                                 },
                               ),
+                            );
+                            context.read<ProviderPart>().displayVal(
+                              mainNo[index],
                             );
                           },
                           child: DetailsContainer(

@@ -73,6 +73,16 @@ class _FullDetailsState extends State<FullDetails> {
             if (gifUrl.isNotEmpty)
               Center(
                 child: Image.network(
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      child: Center(
+                        child: Icon(
+                          size: 200,
+                          Icons.image_not_supported_rounded,
+                        ),
+                      ),
+                    );
+                  },
                   gifUrl,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -143,21 +153,25 @@ class _FullDetailsState extends State<FullDetails> {
 
             if (secondary.isNotEmpty)
               Row(
-                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Secondary Muscles:',
                     style: TextStyle(fontSize: 12),
                   ),
-                  // const SizedBox(height: 6),
-                  Text(secondary.join(',')),
-                  // Wrap(
-                  //   spacing: 8,
-                  //   runSpacing: 6,
-                  //   children: secondary
-                  //       .map((s) => Chip(label: Text(s)))
-                  //       .toList(),
-                  // ),
+
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          softWrap: false,
+
+                          overflow: TextOverflow.visible,
+                          secondary.join(','),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
 
