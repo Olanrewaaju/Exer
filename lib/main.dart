@@ -3,6 +3,7 @@ import 'package:exer/screens/test1.dart';
 import 'package:exer/state_management/provider_full_details.dart';
 import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/provider_search.dart';
+import 'package:exer/state_management/recent_provider.dart';
 import 'package:exer/state_management/saved_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => RecentProvider()),
         ChangeNotifierProvider(create: (context) => SavedExercise()),
         ChangeNotifierProvider(create: (context) => ProviderPart()),
         ChangeNotifierProvider(create: (context) => ProviderSearch()),

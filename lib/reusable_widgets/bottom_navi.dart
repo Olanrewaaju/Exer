@@ -20,6 +20,22 @@ class _BottomNaviState extends State<BottomNavi> {
     BookmarkedScreen(),
     ProfileScreen(),
   ];
+  void onTapped(int index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return SearchScreen();
+          },
+        ),
+      );
+    } else {
+      setState(() {
+        selectedIndex = index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +43,7 @@ class _BottomNaviState extends State<BottomNavi> {
       body: screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
+        onTap: onTapped,
         currentIndex: selectedIndex,
         items: [
           BottomNavigationBarItem(
