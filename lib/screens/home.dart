@@ -88,7 +88,8 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: 32),
-
+              Text('Body Target', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 16),
               FutureBuilder<List<dynamic>>(
                 future: mainz,
                 builder: (context, snapshot) {

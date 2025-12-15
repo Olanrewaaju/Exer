@@ -1,3 +1,5 @@
+import 'package:exer/screens/full_details.dart';
+import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/saved_exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,20 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
                   },
                   key: Key(item['exerciseId'].toString()),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return FullDetails(
+                              name: '',
+                              exercise: savedVal[index],
+                            );
+                          },
+                        ),
+                      );
+                      context.read<ProviderPart>().displayVal(savedVal[index]);
+                    },
                     leading: Image.network(
                       errorBuilder: (context, error, stackTrace) {
                         return Padding(

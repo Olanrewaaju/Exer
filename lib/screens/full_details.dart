@@ -1,6 +1,7 @@
 /*import 'dart:math';*/
 
 import 'package:exer/reusable_widgets/auto_caps.dart';
+import 'package:exer/screens/bookmarked_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exer/state_management/provider_part.dart';
@@ -111,16 +112,37 @@ class _FullDetailsState extends State<FullDetails> {
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            backgroundColor: Colors.black87,
+                            backgroundColor: const Color.fromARGB(221, 9, 9, 9),
                             behavior: SnackBarBehavior.floating,
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(12),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(3),
+                              borderRadius: BorderRadiusGeometry.circular(8),
                             ),
                             duration: Duration(milliseconds: 900),
-                            content: saved
-                                ? Text('Removed from Bookmarked')
-                                : Text('Added to Bookmark'),
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                saved
+                                    ? Text('Removed from Bookmarked')
+                                    : Text('Added to Bookmark'),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return BookmarkedScreen();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'View',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
 
