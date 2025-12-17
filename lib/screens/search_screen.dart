@@ -1,4 +1,3 @@
-import 'package:exer/screens/bookmarked_screen.dart';
 import 'package:exer/screens/search_display.dart';
 import 'package:exer/state_management/provider_search.dart';
 import 'package:exer/state_management/recent_provider.dart';

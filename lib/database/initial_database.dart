@@ -23,10 +23,10 @@ class InitialDatabase {
 
   Future _createDB(Database db, int version) async {
     await db.execute('''
-CREATE TABLE firstData(
+CREATE TABLE data(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
-imagePic TEXT NOT NULL
+imagePic TEXT NOT NULL,
 part TEXT NOT NULL
 )
 ''');
@@ -38,9 +38,19 @@ part TEXT NOT NULL
     return await db.update('data', rows, where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<List<Map<String, dynamic>>> displayTab() async {
+    final db = await instance.database;
+
+    return await db.query('data');
+  }
+
   Future insertTab(Map<String, dynamic> rows) async {
     final db = await instance.database;
-    return await db.insert('data', rows);
+    return await db.insert(
+      'data',
+      rows,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future deleteTab(int id) async {

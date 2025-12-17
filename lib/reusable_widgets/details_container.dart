@@ -30,7 +30,7 @@ class DetailsContainer extends StatelessWidget {
             //   return const Center(child: CircularProgressIndicator());
             // },
             errorBuilder: (context, error, stackTrace) {
-              return Container(width: 120, child: Icon(Icons.image_rounded));
+              return SizedBox(width: 120, child: Icon(Icons.image_rounded));
             },
           ),
           SizedBox(width: 10),

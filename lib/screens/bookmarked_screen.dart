@@ -1,8 +1,6 @@
 import 'package:exer/screens/full_details.dart';
-import 'package:exer/state_management/provider_part.dart';
-import 'package:exer/state_management/saved_exercise.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:exer/database/initial_database.dart';
 
 class BookmarkedScreen extends StatefulWidget {
   const BookmarkedScreen({super.key});
@@ -12,6 +10,20 @@ class BookmarkedScreen extends StatefulWidget {
 }
 
 class _BookmarkedScreenState extends State<BookmarkedScreen> {
+  late Future<List<Map<String, dynamic>>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = InitialDatabase.instance.displayTab();
+  }
+
+  void _reload() {
+    setState(() {
+      _future = InitialDatabase.instance.displayTab();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,52 +32,59 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
         centerTitle: true,
         title: Text('Bookmarked Exercises'),
       ),
-      body: Consumer<SavedExercise>(
-        builder: (context, savedExer, _) {
-          final savedVal = savedExer.bookmarkedItem;
-          if (savedVal.isEmpty) {
-            return Center(child: Text('Empty Text'));
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No bookmarks yet'));
+          }
+
+          final bookmarks = snapshot.data!;
+
           return ListView.builder(
-            itemCount: savedExer.bookmarkedItem.length,
+            itemCount: bookmarks.length,
             itemBuilder: (context, index) {
-              final item = savedVal[index];
-              return SizedBox(
-                height: 90,
-                child: Dismissible(
-                  onDismissed: (direction) {
-                    context.read<SavedExercise>().removeBookmark(
-                      item['exerciseId'],
+              final item = bookmarks[index];
+
+              return Dismissible(
+                key: ValueKey(item['id']), // ✅ SQLite ID
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 20),
+                  child: Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (_) async {
+                  await InitialDatabase.instance.deleteTab(item['id']);
+                  _reload();
+                },
+                child: ListTile(
+                  leading: Image.network(
+                    item['imagePic'],
+                    width: 50,
+                    errorBuilder: (_, __, ___) =>
+                        Icon(Icons.image_not_supported),
+                  ),
+                  title: Text(item['name']),
+                  subtitle: Text(item['part']), // ✅ STRING
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            FullDetails(name: item['name'], exercise: item),
+                      ),
                     );
                   },
-                  key: Key(item['exerciseId'].toString()),
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return FullDetails(
-                              name: '',
-                              exercise: savedVal[index],
-                            );
-                          },
-                        ),
-                      );
-                      context.read<ProviderPart>().displayVal(savedVal[index]);
-                    },
-                    leading: Image.network(
-                      errorBuilder: (context, error, stackTrace) {
-                        return Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Icon(Icons.image_not_supported_rounded),
-                        );
-                      },
-                      item['gifUrl'],
-                    ),
-                    title: Text(item['name']),
-                    subtitle: Text(item['bodyParts'][0]),
-                  ),
                 ),
               );
             },

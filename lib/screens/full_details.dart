@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/saved_exercise.dart';
+import 'package:exer/database/initial_database.dart';
 
 class FullDetails extends StatefulWidget {
   final String name;
@@ -17,12 +18,13 @@ class FullDetails extends StatefulWidget {
 }
 
 class _FullDetailsState extends State<FullDetails> {
+  final dbHelper = InitialDatabase.instance;
   bool bookmarked = true;
 
   @override
   Widget build(BuildContext context) {
-    final providerData = context.watch<ProviderPart>().val;
-    final Map<String, dynamic> data = providerData ?? widget.exercise;
+    // final providerData = context.watch<ProviderPart>().val;
+    final Map<String, dynamic> data = widget.exercise;
 
     final String gifUrl = (data['gifUrl'] ?? '') as String;
     final String title = (data['name'] ?? widget.name).toString();
@@ -108,8 +110,18 @@ class _FullDetailsState extends State<FullDetails> {
                   builder: (context, value, _) {
                     final item = data;
                     final saved = value.isBookmarked(item['exerciseId']);
+                    final items = widget.exercise;
+
                     return IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await dbHelper.insertTab({
+                          'name': items['name'] ?? 'Unknown',
+                          'imagePic': items['gifUrl'] ?? '',
+                          'part': items['bodyPart'] ?? '',
+                        });
+                        final datass = await InitialDatabase.instance
+                            .displayTab();
+                        print(datass);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: const Color.fromARGB(221, 9, 9, 9),
@@ -147,6 +159,7 @@ class _FullDetailsState extends State<FullDetails> {
                         );
 
                         context.read<SavedExercise>().toggeBookmarks(item);
+
                         // setState(() {
                         //   bookmarked = !bookmarked;
                         // });
@@ -224,7 +237,7 @@ class _FullDetailsState extends State<FullDetails> {
                 itemCount: instructions.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
-                  return Text('${instructions[index]}');
+                  return Text(instructions[index]);
                 },
               ),
             ],
