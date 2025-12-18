@@ -1,6 +1,8 @@
 import 'package:exer/screens/full_details.dart';
 import 'package:flutter/material.dart';
 import 'package:exer/database/initial_database.dart';
+import 'package:exer/state_management/provider_part.dart';
+import 'package:provider/provider.dart';
 
 class BookmarkedScreen extends StatefulWidget {
   const BookmarkedScreen({super.key});
@@ -69,21 +71,26 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
                 },
                 child: ListTile(
                   leading: Image.network(
-                    item['imagePic'],
+                    item['gifUrl'] ?? item['imagePic'] ?? '',
                     width: 50,
                     errorBuilder: (_, __, ___) =>
                         Icon(Icons.image_not_supported),
                   ),
                   title: Text(item['name']),
-                  subtitle: Text(item['part']), // ✅ STRING
+                  subtitle: Text(item['part']),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) =>
-                            FullDetails(name: item['name'], exercise: item),
+                        builder: (context) {
+                          return FullDetails(
+                            name: item['name'],
+                            exercise: item,
+                          );
+                        },
                       ),
                     );
+                    context.read<ProviderPart>().displayVal(item);
                   },
                 ),
               );

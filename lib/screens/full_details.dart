@@ -116,8 +116,18 @@ class _FullDetailsState extends State<FullDetails> {
                       onPressed: () async {
                         await dbHelper.insertTab({
                           'name': items['name'] ?? 'Unknown',
-                          'imagePic': items['gifUrl'] ?? '',
-                          'part': items['bodyPart'] ?? '',
+                          'gifUrl': items['gifUrl'] ?? '',
+                          'part':
+                              items['bodyParts'] != null &&
+                                  items['bodyParts'].isNotEmpty
+                              ? items['bodyParts'][0]
+                              : 'Unknown',
+                          'exerciseId': items['exerciseId'],
+                          'description': items['description'] ?? '',
+                          'targetMuscles': items['targetMuscles'] ?? [],
+                          'secondaryMuscles': items['secondaryMuscles'] ?? [],
+                          'bodyParts': items['bodyParts'] ?? [],
+                          'instructions': items['instructions'] ?? [],
                         });
                         final datass = await InitialDatabase.instance
                             .displayTab();
