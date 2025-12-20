@@ -4,7 +4,6 @@ import 'package:exer/reusable_widgets/auto_caps.dart';
 import 'package:exer/screens/bookmarked_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/saved_exercise.dart';
 import 'package:exer/database/initial_database.dart';
 
@@ -114,24 +113,6 @@ class _FullDetailsState extends State<FullDetails> {
 
                     return IconButton(
                       onPressed: () async {
-                        await dbHelper.insertTab({
-                          'name': items['name'] ?? 'Unknown',
-                          'gifUrl': items['gifUrl'] ?? '',
-                          'part':
-                              items['bodyParts'] != null &&
-                                  items['bodyParts'].isNotEmpty
-                              ? items['bodyParts'][0]
-                              : 'Unknown',
-                          'exerciseId': items['exerciseId'],
-                          'description': items['description'] ?? '',
-                          'targetMuscles': items['targetMuscles'] ?? [],
-                          'secondaryMuscles': items['secondaryMuscles'] ?? [],
-                          'bodyParts': items['bodyParts'] ?? [],
-                          'instructions': items['instructions'] ?? [],
-                        });
-                        final datass = await InitialDatabase.instance
-                            .displayTab();
-                        print(datass);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: const Color.fromARGB(221, 9, 9, 9),
@@ -168,6 +149,23 @@ class _FullDetailsState extends State<FullDetails> {
                           ),
                         );
 
+                        await dbHelper.insertTab({
+                          'name': items['name'] ?? 'Unknown',
+                          'gifUrl': items['gifUrl'] ?? '',
+                          'part':
+                              items['bodyParts'] != null &&
+                                  items['bodyParts'].isNotEmpty
+                              ? items['bodyParts'][0]
+                              : 'Unknown',
+                          'exerciseId': items['exerciseId'],
+                          'description': items['description'] ?? '',
+                          'targetMuscles': items['targetMuscles'] ?? [],
+                          'secondaryMuscles': items['secondaryMuscles'] ?? [],
+                          'bodyParts': items['bodyParts'] ?? [],
+                          'instructions': items['instructions'] ?? [],
+                        });
+                        final datass = await InitialDatabase.instance
+                            .displayTab();
                         context.read<SavedExercise>().toggeBookmarks(item);
 
                         // setState(() {

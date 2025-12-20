@@ -5,12 +5,26 @@ class RecentProvider extends ChangeNotifier {
 
   List<String> get recentWords => _recentWords;
 
-  void addtoList(String word) {
-    if (word.trim().isEmpty) return;
+  void hydrate(List<String> words) {
+    final seen = <String>{};
 
-    if (!_recentWords.contains(word)) {
-      _recentWords.add(word);
-      notifyListeners();
+    _recentWords.clear();
+    for (final word in words) {
+      final normalized = word.trim();
+      if (normalized.isEmpty) continue;
+      if (!seen.add(normalized)) continue;
+      _recentWords.add(normalized);
     }
+    notifyListeners();
+  }
+
+  void addtoList(String word) {
+    final normalized = word.trim();
+    if (normalized.isEmpty) return;
+
+    // Keep most-recent-first ordering.
+    _recentWords.remove(normalized);
+    _recentWords.insert(0, normalized);
+    notifyListeners();
   }
 }

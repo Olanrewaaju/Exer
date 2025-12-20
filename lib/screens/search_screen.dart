@@ -1,3 +1,4 @@
+import 'package:exer/database/initial_database.dart';
 import 'package:exer/screens/search_display.dart';
 import 'package:exer/state_management/provider_search.dart';
 import 'package:exer/state_management/recent_provider.dart';
@@ -12,10 +13,29 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final dbHelper = InitialDatabase.instance;
   final TextEditingController searchValue = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentSearches();
+  }
+
+  Future<void> _loadRecentSearches() async {
+    final results = await dbHelper.displaySearch();
+    final words = results
+        .map((row) => (row['searchedWord'] ?? '').toString())
+        .where((w) => w.trim().isNotEmpty)
+        .toList();
+
+    if (!mounted) return;
+    context.read<RecentProvider>().hydrate(words);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final worders = context.read<RecentProvider>().recentWords;
+    final worders = context.watch<RecentProvider>().recentWords;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -49,10 +69,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       return Text('');
                     },
               ),
-              onSubmitted: (value) {
+              onSubmitted: (value) async {
+                final query = searchValue.text.trim();
+                if (query.isEmpty) return;
+
                 // Update provider BEFORE navigating
-                context.read<ProviderSearch>().searches(searchValue.text);
-                context.read<RecentProvider>().addtoList(searchValue.text);
+                context.read<ProviderSearch>().searches(query);
+                context.read<RecentProvider>().addtoList(query);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -61,6 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   ),
                 );
+                await dbHelper.insertSearch({'searchedWord': query});
               },
 
               controller: searchValue,
@@ -83,7 +107,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 10.0),
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         Navigator.push(
                           context,
                           MaterialPageRoute(

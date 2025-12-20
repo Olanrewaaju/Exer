@@ -49,6 +49,13 @@ bodyParts TEXT,
 instructions TEXT
 )
 ''');
+    await db.execute('''
+CREATE TABLE search(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+searchedWord TEXT NOT NULL
+)
+
+''');
   }
 
   Future updateTab(Map<String, dynamic> rows) async {
@@ -115,5 +122,26 @@ instructions TEXT
   Future deleteTab(int id) async {
     final db = await instance.database;
     return await db.delete('data', where: 'id =?', whereArgs: [id]);
+  }
+
+  Future insertSearch(Map<String, dynamic> rows) async {
+    final db = await instance.database;
+
+    final searchedWord = (rows['searchedWord'] ?? '').toString().trim();
+    if (searchedWord.isEmpty) return;
+
+    // Avoid duplicates so hydration doesn't reorder unexpectedly after restart.
+    await db.delete(
+      'search',
+      where: 'searchedWord = ?',
+      whereArgs: [searchedWord],
+    );
+
+    return await db.insert('search', {'searchedWord': searchedWord});
+  }
+
+  Future<List<Map<String, dynamic>>> displaySearch() async {
+    final db = await instance.database;
+    return await db.query('search', orderBy: 'id DESC');
   }
 }
