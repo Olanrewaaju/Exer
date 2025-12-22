@@ -25,7 +25,7 @@ class _FullDetailsState extends State<FullDetails> {
     // final providerData = context.watch<ProviderPart>().val;
     final Map<String, dynamic> data = widget.exercise;
 
-    final String gifUrl = (data['gifUrl'] ?? '') as String;
+    final String gifUrl = (data['gifUrl'] ?? '').toString();
     final String title = (data['name'] ?? widget.name).toString();
     final String description = (data['description'] ?? '').toString();
 
@@ -54,6 +54,10 @@ class _FullDetailsState extends State<FullDetails> {
       final s = (data['instructions'] as String).trim();
       if (s.isNotEmpty) instructions = [s];
     }
+
+    final String exerciseId = (data['exerciseId'] ?? data['id'] ?? '')
+        .toString()
+        .trim();
 
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +112,7 @@ class _FullDetailsState extends State<FullDetails> {
                 Consumer<SavedExercise>(
                   builder: (context, value, _) {
                     final item = data;
-                    final saved = value.isBookmarked(item['exerciseId']);
+                    final saved = value.isBookmarked(exerciseId);
                     final items = widget.exercise;
 
                     return IconButton(
@@ -157,7 +161,7 @@ class _FullDetailsState extends State<FullDetails> {
                                   items['bodyParts'].isNotEmpty
                               ? items['bodyParts'][0]
                               : 'Unknown',
-                          'exerciseId': items['exerciseId'],
+                          'exerciseId': exerciseId.isEmpty ? null : exerciseId,
                           'description': items['description'] ?? '',
                           'targetMuscles': items['targetMuscles'] ?? [],
                           'secondaryMuscles': items['secondaryMuscles'] ?? [],

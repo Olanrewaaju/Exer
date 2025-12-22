@@ -19,10 +19,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => RecentProvider()),
+        ChangeNotifierProvider(
+          create: (context) => RecentProvider()..loadFromDb(),
+        ),
         ChangeNotifierProvider(create: (context) => SavedExercise()),
         ChangeNotifierProvider(create: (context) => ProviderPart()),
-        ChangeNotifierProvider(create: (context) => ProviderSearch()),
+        ChangeNotifierProvider(
+          create: (context) => ProviderSearch()..loadLastQueryFromDb(),
+        ),
         ChangeNotifierProvider(create: (context) => ProviderFullDetails()),
       ],
       child: MaterialApp(

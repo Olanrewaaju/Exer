@@ -1,4 +1,3 @@
-import 'package:exer/database/initial_database.dart';
 import 'package:exer/screens/search_display.dart';
 import 'package:exer/state_management/provider_search.dart';
 import 'package:exer/state_management/recent_provider.dart';
@@ -13,24 +12,45 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final dbHelper = InitialDatabase.instance;
   final TextEditingController searchValue = TextEditingController();
+  bool _didAutofill = false;
+  ProviderSearch? _providerSearch;
+
+  void _syncControllerWithLastQuery() {
+    if (!mounted) return;
+    if (_didAutofill) return;
+
+    final lastQuery = _providerSearch?.searchedWord.trim() ?? '';
+    if (lastQuery.isEmpty) return;
+    if (searchValue.text.trim().isNotEmpty) return;
+
+    _didAutofill = true;
+    searchValue.text = lastQuery;
+    searchValue.selection = TextSelection.fromPosition(
+      TextPosition(offset: searchValue.text.length),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _loadRecentSearches();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<RecentProvider>().loadFromDb();
+
+      _providerSearch = context.read<ProviderSearch>();
+      _providerSearch!.addListener(_syncControllerWithLastQuery);
+
+      // In case ProviderSearch already hydrated before this widget mounts.
+      _syncControllerWithLastQuery();
+    });
   }
 
-  Future<void> _loadRecentSearches() async {
-    final results = await dbHelper.displaySearch();
-    final words = results
-        .map((row) => (row['searchedWord'] ?? '').toString())
-        .where((w) => w.trim().isNotEmpty)
-        .toList();
-
-    if (!mounted) return;
-    context.read<RecentProvider>().hydrate(words);
+  @override
+  void dispose() {
+    _providerSearch?.removeListener(_syncControllerWithLastQuery);
+    searchValue.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,12 +90,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
               ),
               onSubmitted: (value) async {
-                final query = searchValue.text.trim();
+                final query = value.trim();
                 if (query.isEmpty) return;
 
-                // Update provider BEFORE navigating
-                context.read<ProviderSearch>().searches(query);
-                context.read<RecentProvider>().addtoList(query);
+                if (!context.mounted) return;
+                // Persist first so the query survives app kill/restart.
+                await context.read<ProviderSearch>().setAndPersist(query);
+                await context.read<RecentProvider>().addAndPersist(query);
+                if (!context.mounted) return;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -84,7 +106,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   ),
                 );
-                await dbHelper.insertSearch({'searchedWord': query});
               },
 
               controller: searchValue,
@@ -108,6 +129,23 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.only(right: 10.0),
                     child: GestureDetector(
                       onTap: () async {
+                        final query = worders[index].trim();
+                        if (query.isEmpty) return;
+
+                        // Update/persist BEFORE navigating so SearchDisplay uses the correct query.
+                        await context.read<ProviderSearch>().setAndPersist(
+                          query,
+                        );
+                        searchValue.text = query;
+                        searchValue.selection = TextSelection.fromPosition(
+                          TextPosition(offset: searchValue.text.length),
+                        );
+
+                        await context.read<RecentProvider>().addAndPersist(
+                          query,
+                        );
+                        if (!context.mounted) return;
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -116,7 +154,16 @@ class _SearchScreenState extends State<SearchScreen> {
                             },
                           ),
                         );
-                        context.read<ProviderSearch>().searches(worders[index]);
+
+                        // if (!context.mounted) return;
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) {
+                        //       return SearchDisplay();
+                        //     },
+                        //   ),
+                        // );
                       },
                       child: Chip(
                         color: WidgetStatePropertyAll(
