@@ -92,11 +92,6 @@ class _SearchScreenState extends State<SearchScreen> {
               onSubmitted: (value) async {
                 final query = value.trim();
                 if (query.isEmpty) return;
-
-                if (!context.mounted) return;
-                // Persist first so the query survives app kill/restart.
-                await context.read<ProviderSearch>().setAndPersist(query);
-                await context.read<RecentProvider>().addAndPersist(query);
                 if (!context.mounted) return;
                 Navigator.push(
                   context,
@@ -106,6 +101,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   ),
                 );
+
+                if (!context.mounted) return;
+                // Persist first so the query survives app kill/restart.
+                await context.read<ProviderSearch>().setAndPersist(query);
+                await context.read<RecentProvider>().addAndPersist(query);
               },
 
               controller: searchValue,

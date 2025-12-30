@@ -18,7 +18,7 @@ class _BottomNaviState extends State<BottomNavi> {
     Home(),
     SearchScreen(),
     BookmarkedScreen(),
-    ProfileScreen(),
+    // ProfileScreen(),
   ];
   void onTapped(int index) {
     if (index == 1) {
@@ -42,7 +42,7 @@ class _BottomNaviState extends State<BottomNavi> {
     return Scaffold(
       body: screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        // type: BottomNavigationBarType.fixed,
         onTap: onTapped,
         currentIndex: selectedIndex,
         items: [
@@ -60,7 +60,7 @@ class _BottomNaviState extends State<BottomNavi> {
             icon: Icon(Icons.bookmark),
             label: 'Bookmarks',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          // BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

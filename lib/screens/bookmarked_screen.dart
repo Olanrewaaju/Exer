@@ -31,7 +31,7 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        centerTitle: true,
+        // centerTitle: true,
         title: Text('Bookmarked Exercises'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
