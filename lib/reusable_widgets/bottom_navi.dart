@@ -1,4 +1,3 @@
-import 'package:exer/screens/profile_screen.dart';
 import 'package:exer/screens/search_screen.dart';
 
 import '../screens/bookmarked_screen.dart';

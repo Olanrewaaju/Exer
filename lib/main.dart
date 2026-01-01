@@ -1,4 +1,5 @@
 import 'package:exer/reusable_widgets/bottom_navi.dart';
+import 'package:exer/screens/initial_animation.dart';
 import 'package:exer/state_management/provider_full_details.dart';
 import 'package:exer/state_management/provider_part.dart';
 import 'package:exer/state_management/provider_search.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Manrope',
         ),
-        home: const BottomNavi(),
+        home: const InitialAnimation(),
       ),
     );
   }
