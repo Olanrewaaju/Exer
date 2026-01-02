@@ -31,6 +31,7 @@ class _BookmarkedScreenState extends State<BookmarkedScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
+        automaticallyImplyLeading: false,
         // centerTitle: true,
         title: Text('Bookmarked Exercises'),
       ),

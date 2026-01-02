@@ -65,13 +65,17 @@ class _InitialAnimationState extends State<InitialAnimation>
                 Text(aniimationDescription[index]),
 
                 SizedBox(height: 40),
+                AnimatedContainer(
+                  duration: Duration(seconds: 8),
+                  foregroundDecoration: BoxDecoration(color: Colors.teal),
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    if (index != 3) {
+                    if (index < animationName.length - 1) {
                       setState(() {
-                        index++;
+                        index += 1;
                       });
-                    } else if (index == 3) {
+                    } else if (index == 2) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
