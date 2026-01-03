@@ -17,8 +17,6 @@ Future<Map<String, dynamic>> exers() async {
   final response = await http.get(selectedParts);
 
   if (response.statusCode == 200) {
-    final chipContent = response.body;
-
     return jsonDecode(response.body);
   }
 
@@ -35,14 +33,32 @@ class _SelectedExercisesState extends State<SelectedExercises> {
           if (snapshot.hasData) {
             final chipValues = snapshot.data!;
 
-            return ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Chip(label: Text(chipValues['data'][index]['name']));
-              },
+            final data = (chipValues['data'] as List?) ?? const [];
+
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: List.generate(
+                    data.length,
+                    (index) => ChoiceChip(
+                      disabledColor: Colors.black,
+                      selected: true,
+                      selectedColor: const Color.fromARGB(255, 34, 82, 166),
+                      showCheckmark: false,
+                      label: Text(
+                        (data[index] as Map?)?['name']?.toString() ?? '',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             );
           }
-          return Text('');
+
+          return const SizedBox.shrink();
         },
       ),
     );
