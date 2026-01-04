@@ -24,6 +24,7 @@ Future<Map<String, dynamic>> exers() async {
 }
 
 class _SelectedExercisesState extends State<SelectedExercises> {
+  bool boolValue = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +45,16 @@ class _SelectedExercisesState extends State<SelectedExercises> {
                   children: List.generate(
                     data.length,
                     (index) => ChoiceChip(
+                      onSelected: (value) {
+                        setState(() {
+                          boolValue = !boolValue;
+                        });
+                      },
                       disabledColor: Colors.black,
                       selected: true,
-                      selectedColor: const Color.fromARGB(255, 34, 82, 166),
+                      selectedColor: boolValue
+                          ? Color.fromARGB(255, 34, 82, 166)
+                          : Color.fromARGB(255, 91, 225, 113),
                       showCheckmark: false,
                       label: Text(
                         (data[index] as Map?)?['name']?.toString() ?? '',
