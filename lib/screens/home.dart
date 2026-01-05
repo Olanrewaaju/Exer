@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
           children: [
             Text(today, style: TextStyle(fontSize: 16)),
             SizedBox(height: 8),
-            Text('Hello, Tayo', style: TextStyle(fontSize: 14)),
+            Text('Hello There', style: TextStyle(fontSize: 14)),
           ],
         ),
         // leading: Expanded(child: Text(today))),

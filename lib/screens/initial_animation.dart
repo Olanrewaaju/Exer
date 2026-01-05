@@ -61,7 +61,12 @@ class _InitialAnimationState extends State<InitialAnimation>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(animationCaption[index]),
+                SizedBox(height: 40),
+                Text(
+                  animationCaption[index],
+
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w700),
+                ),
                 Text(aniimationDescription[index]),
 
                 SizedBox(height: 40),
