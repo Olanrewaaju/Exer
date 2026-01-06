@@ -13,12 +13,7 @@ class BottomNavi extends StatefulWidget {
 
 class _BottomNaviState extends State<BottomNavi> {
   int selectedIndex = 0;
-  final List<Widget> screens = [
-    Home(),
-    SearchScreen(),
-    BookmarkedScreen(),
-    // ProfileScreen(),
-  ];
+  final List<Widget> screens = [Home(), SearchScreen(), BookmarkedScreen()];
   void onTapped(int index) {
     if (index == 1) {
       Navigator.push(
