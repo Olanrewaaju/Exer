@@ -15,7 +15,7 @@ class _InitialAnimationState extends State<InitialAnimation>
   final List animationName = [
     'assets/animationGif/slide1.json',
     'assets/animationGif/slide2.json',
-    'assets/animationGif/slide2.json',
+    'assets/animationGif/slide3.json',
   ];
   List animationCaption = [
     'Stay Organized',
@@ -29,74 +29,115 @@ class _InitialAnimationState extends State<InitialAnimation>
   ];
   @override
   Widget build(BuildContext context) {
+    final currentKey = ValueKey<int>(index);
     return Scaffold(
-      body: Column(
-        children: [
-          AnimatedSwitcher(
-            duration: Duration(seconds: 1),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Spacer(),
+            AnimatedSwitcher(
+              duration: Duration(seconds: 1),
+              transitionBuilder: (child, animation) {
+                final isIncoming = child.key == currentKey;
 
-            transitionBuilder: (child, tres) {
-              final offsetanimation = Tween<Offset>(
-                begin: Offset(-1.0, 0),
-                end: Offset.zero,
-              ).animate(tres);
-              return SlideTransition(position: offsetanimation, child: child);
-            },
-            child: Lottie.asset(
-              animationName[index],
-              key: ValueKey<int>(index),
-              repeat: true,
+                final inAnimation = Tween<Offset>(
+                  begin: const Offset(-1.0, 0),
+                  end: Offset.zero,
+                ).animate(animation);
+
+                final outAnimation = Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(1.0, 0),
+                ).animate(animation);
+
+                return SlideTransition(
+                  position: isIncoming ? inAnimation : outAnimation,
+                  child: child,
+                );
+              },
+              child: Lottie.asset(
+                animationName[index],
+                key: currentKey,
+                repeat: true,
+              ),
             ),
-          ),
-          AnimatedSwitcher(
-            duration: Duration(seconds: 1),
+            Spacer(),
+            AnimatedSwitcher(
+              duration: Duration(seconds: 1),
 
-            transitionBuilder: (child, tres) {
-              final offsetanimation = Tween<Offset>(
-                begin: Offset(-1.0, 0),
-                end: Offset.zero,
-              ).animate(tres);
-              return SlideTransition(position: offsetanimation, child: child);
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 40),
-                Text(
-                  animationCaption[index],
+              transitionBuilder: (child, animation) {
+                final isIncoming = child.key == currentKey;
 
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w700),
-                ),
-                Text(aniimationDescription[index]),
+                final inAnimation = Tween<Offset>(
+                  begin: const Offset(-1.0, 0),
+                  end: Offset.zero,
+                ).animate(animation);
 
-                SizedBox(height: 40),
-                AnimatedContainer(
-                  duration: Duration(seconds: 8),
-                  foregroundDecoration: BoxDecoration(color: Colors.teal),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (index < animationName.length - 1) {
-                      setState(() {
-                        index += 1;
-                      });
-                    } else if (index == 2) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return BottomNavi();
-                          },
-                        ),
-                      );
-                    }
-                  },
-                  child: Text('Proceed'),
-                ),
-              ],
+                final outAnimation = Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(1.0, 0),
+                ).animate(animation);
+
+                return SlideTransition(
+                  position: isIncoming ? inAnimation : outAnimation,
+                  child: child,
+                );
+              },
+              child: Column(
+                key: currentKey,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40),
+                  Text(
+                    textAlign: TextAlign.start,
+                    animationCaption[index],
+
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 14),
+                  Text(aniimationDescription[index]),
+
+                  SizedBox(height: 40),
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (index < animationName.length - 1) {
+                    setState(() {
+                      index += 1;
+                    });
+                  } else if (index == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return BottomNavi();
+                        },
+                      ),
+                    );
+                  }
+                },
+                style: ButtonStyle(
+                  elevation: WidgetStatePropertyAll(6),
+                  backgroundColor: WidgetStatePropertyAll(
+                    const Color.fromARGB(255, 36, 88, 165),
+                  ),
+                ),
+
+                child: Text(
+                  index < animationCaption.length - 1 ? 'Next' : 'Proceed',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

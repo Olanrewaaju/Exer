@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Manrope',
         ),
-        home: const BottomNavi(),
+        home: const InitialAnimation(),
       ),
     );
   }
