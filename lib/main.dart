@@ -36,13 +36,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white,
+            seedColor: const Color.fromARGB(255, 36, 88, 165),
+
             // background: Colors.white,
           ),
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Manrope',
         ),
-        home: const InitialAnimation(),
+        home: const SelectedExercises(),
       ),
     );
   }

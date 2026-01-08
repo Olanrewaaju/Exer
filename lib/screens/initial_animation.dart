@@ -37,19 +37,30 @@ class _InitialAnimationState extends State<InitialAnimation>
           children: [
             Spacer(),
             AnimatedSwitcher(
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 750),
+              layoutBuilder: (currentChild, previousChildren) => Stack(
+                alignment: Alignment.center,
+                children: [
+                  ...previousChildren,
+                  if (currentChild != null) currentChild,
+                ],
+              ),
               transitionBuilder: (child, animation) {
                 final isIncoming = child.key == currentKey;
+                final curved = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOutCubic,
+                );
 
                 final inAnimation = Tween<Offset>(
                   begin: const Offset(-1.0, 0),
                   end: Offset.zero,
-                ).animate(animation);
+                ).animate(curved);
 
                 final outAnimation = Tween<Offset>(
-                  begin: Offset.zero,
-                  end: const Offset(1.0, 0),
-                ).animate(animation);
+                  begin: const Offset(1.0, 0),
+                  end: Offset.zero,
+                ).animate(curved);
 
                 return SlideTransition(
                   position: isIncoming ? inAnimation : outAnimation,
@@ -64,20 +75,30 @@ class _InitialAnimationState extends State<InitialAnimation>
             ),
             Spacer(),
             AnimatedSwitcher(
-              duration: Duration(seconds: 1),
-
+              duration: Duration(milliseconds: 750),
+              layoutBuilder: (currentChild, previousChildren) => Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  ...previousChildren,
+                  if (currentChild != null) currentChild,
+                ],
+              ),
               transitionBuilder: (child, animation) {
                 final isIncoming = child.key == currentKey;
+                final curved = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOutCubic,
+                );
 
                 final inAnimation = Tween<Offset>(
                   begin: const Offset(-1.0, 0),
                   end: Offset.zero,
-                ).animate(animation);
+                ).animate(curved);
 
                 final outAnimation = Tween<Offset>(
-                  begin: Offset.zero,
-                  end: const Offset(1.0, 0),
-                ).animate(animation);
+                  begin: const Offset(1.0, 0),
+                  end: Offset.zero,
+                ).animate(curved);
 
                 return SlideTransition(
                   position: isIncoming ? inAnimation : outAnimation,

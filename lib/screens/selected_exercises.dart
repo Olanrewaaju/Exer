@@ -24,10 +24,12 @@ Future<Map<String, dynamic>> exers() async {
 }
 
 class _SelectedExercisesState extends State<SelectedExercises> {
-  bool boolValue = false;
+  final Set<int> selectedIndices = <int>{};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Select Your Focus')),
       body: FutureBuilder<Map<String, dynamic>>(
         future: exers(),
         builder: (context, snapshot) {
@@ -38,29 +40,73 @@ class _SelectedExercisesState extends State<SelectedExercises> {
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: List.generate(
-                    data.length,
-                    (index) => ChoiceChip(
-                      onSelected: (value) {
-                        setState(() {
-                          boolValue = !boolValue;
-                        });
-                      },
-                      disabledColor: Colors.black,
-                      selected: true,
-                      selectedColor: boolValue
-                          ? Color.fromARGB(255, 34, 82, 166)
-                          : Color.fromARGB(255, 91, 225, 113),
-                      showCheckmark: false,
-                      label: Text(
-                        (data[index] as Map?)?['name']?.toString() ?? '',
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 60),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        data.length,
+                        (index) => ChoiceChip(
+                          side: BorderSide(color: Colors.white),
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (selected) {
+                                selectedIndices.add(index);
+                              } else {
+                                selectedIndices.remove(index);
+                              }
+                            });
+                          },
+                          selected: selectedIndices.contains(index),
+
+                          backgroundColor: Color.fromARGB(16, 32, 90, 178),
+                          selectedColor: const Color.fromARGB(255, 36, 88, 165),
+                          showCheckmark: false,
+                          label: Text(
+                            (data[index] as Map?)?['name']?.toString() ?? '',
+                            style: TextStyle(
+                              color: selectedIndices.contains(index)
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(height: 30),
+                    Container(
+                      width: 160,
+                      height: 60,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          elevation: WidgetStatePropertyAll(6),
+                          backgroundColor: WidgetStatePropertyAll(
+                            const Color.fromARGB(255, 36, 88, 165),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Proceed',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Icon(Icons.arrow_forward_ios, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
